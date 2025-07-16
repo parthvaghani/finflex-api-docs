@@ -21,6 +21,13 @@
               "development"
             ]
           },
+           {
+            "group": "Api Reference",
+            "pages": [
+              "payincreate",
+              "payinstatus"
+            ]
+          },
           {
             "group": "Essentials",
             "pages": [

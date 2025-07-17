@@ -60,7 +60,11 @@
                     "type": "string"
                   }
                 },
-                "required": ["client_id", "slug", "ref_id"],
+                "required": [
+                  "client_id",
+                  "slug",
+                  "ref_id"
+                ],
                 "type": "object"
               }
             }
@@ -130,7 +134,9 @@
           }
         },
         "summary": "Check QR payment status and get payin order details",
-        "tags": ["Pay In"]
+        "tags": [
+          "Pay In"
+        ]
       }
     },
     "/payin/create-order": {
@@ -190,7 +196,11 @@
                         "type": "string"
                       }
                     },
-                    "required": ["email", "mobile", "name"],
+                    "required": [
+                      "email",
+                      "mobile",
+                      "name"
+                    ],
                     "type": "object"
                   },
                   "order_id": {
@@ -288,7 +298,9 @@
           }
         },
         "summary": "Create payin order (deposit)",
-        "tags": ["Pay In"]
+        "tags": [
+          "Pay In"
+        ]
       }
     }
   },

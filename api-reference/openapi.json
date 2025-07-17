@@ -1,72 +1,67 @@
 {
-  "openapi": "3.1.0",
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "description": "Comprehensive financial APIs designed to streamline your business operations and enhance your customer experience.\n\nThis documentation covers the Pay In APIs.",
     "license": {
       "name": "MIT"
     },
+    "title": "FinFlex API Reference",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
+  "openapi": "3.0.3",
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
+    "/payin/check-qr-status": {
+      "post": {
+        "description": "Check the payment status of a QR order and return additional payin order details from the database using ref_id.",
         "parameters": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
+            "description": "Finflex client ID (starts with finflex_test_ or finflex_live_)",
+            "example": "finflex_test_6868706820",
+            "in": "header",
+            "name": "x-client-id",
+            "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
+            }
+          },
+          {
+            "description": "Finflex client secret",
+            "example": "finflex_test_be3798f8-deed-4215-97b4-556049549670",
+            "in": "header",
+            "name": "x-client-secret",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
         "requestBody": {
-          "description": "Plant to add to the store",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "properties": {
+                  "client_id": {
+                    "example": "finflex_test_6868706820",
+                    "type": "string"
+                  },
+                  "ref_id": {
+                    "example": "QXCtRyzcsJp91752058602",
+                    "type": "string"
+                  },
+                  "slug": {
+                    "example": "QXCtRyzcsJp9",
+                    "type": "string"
+                  }
+                },
+                "required": ["client_id", "slug", "ref_id"],
+                "type": "object"
               }
             }
           },
@@ -74,144 +69,238 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "properties": {
+                    "payin_order": {
+                      "description": "Payin order details from DB",
+                      "type": "object"
+                    },
+                    "typof": {
+                      "description": "Response from Typof API",
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
                 }
               }
-            }
+            },
+            "description": "Status and payin order details returned"
           },
-          "400": {
-            "description": "unexpected error",
+          "401": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "properties": {
+                    "message": {
+                      "example": "Authentication failed - please provide either valid client credentials or a valid Bearer token",
+                      "type": "string"
+                    },
+                    "status": {
+                      "example": false,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
                 }
               }
-            }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "example": 404,
+                      "type": "number"
+                    },
+                    "message": {
+                      "example": "Payin order not found with the provided ref_id",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Payin order not found"
           }
-        }
+        },
+        "summary": "Check QR payment status and get payin order details",
+        "tags": ["Pay In"]
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/payin/create-order": {
+      "post": {
+        "description": "Create a payin order (deposit). This is the opposite of payout (withdraw). This endpoint supports two authentication methods - either use client credentials headers OR bearer token.",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
+            "description": "Finflex client ID (starts with finflex_test_ or finflex_live_)",
+            "example": "finflex_test_6868706820",
+            "in": "header",
+            "name": "x-client-id",
+            "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
+            }
+          },
+          {
+            "description": "Finflex client secret",
+            "example": "finflex_test_be3798f8-deed-4215-97b4-556049549670",
+            "in": "header",
+            "name": "x-client-secret",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
         "requestBody": {
-          "description": "Plant added to the store",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "properties": {
+                  "amount": {
+                    "example": 10,
+                    "type": "number"
+                  },
+                  "callback_url": {
+                    "example": "https://google.com",
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "example": "finflex_test_6868706820",
+                    "type": "string"
+                  },
+                  "customer_details": {
+                    "properties": {
+                      "email": {
+                        "example": "donation@gmail.com",
+                        "type": "string"
+                      },
+                      "mobile": {
+                        "example": "9040660463",
+                        "type": "string"
+                      },
+                      "name": {
+                        "example": "Testing",
+                        "type": "string"
+                      }
+                    },
+                    "required": ["email", "mobile", "name"],
+                    "type": "object"
+                  },
+                  "order_id": {
+                    "example": "321sdf",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "client_id",
+                  "amount",
+                  "order_id",
+                  "callback_url",
+                  "customer_details"
+                ],
+                "type": "object"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "amount": {
+                          "example": 10,
+                          "type": "number"
+                        },
+                        "client_id": {
+                          "example": "finflex_test_6868706820",
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "example": "2024-07-04T10:30:00Z",
+                          "format": "date-time",
+                          "type": "string"
+                        },
+                        "order_id": {
+                          "example": "321sdf",
+                          "type": "string"
+                        },
+                        "payment_url": {
+                          "example": "https://payment.smebank.com/pay/abc123",
+                          "type": "string"
+                        },
+                        "status": {
+                          "example": "pending",
+                          "type": "string"
+                        },
+                        "transaction_id": {
+                          "example": "txn_987654321",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "message": {
+                      "example": "Payin order created successfully",
+                      "type": "string"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Payin order created successfully"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "example": "Authentication failed - please provide either valid client credentials or a valid Bearer token",
+                      "type": "string"
+                    },
+                    "status": {
+                      "example": false,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Authentication failed"
           }
-        }
+        },
+        "summary": "Create payin order (deposit)",
+        "tags": ["Pay In"]
       }
     }
   },
-  "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
+  "servers": [
+    {
+      "url": "https://48x2gpzu9b.execute-api.ap-south-1.amazonaws.com/v1"
     }
-  }
+  ],
+  "tags": [
+    {
+      "description": "Pay-in operations",
+      "name": "Pay In"
+    }
+  ]
 }

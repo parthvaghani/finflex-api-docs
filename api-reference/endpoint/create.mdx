@@ -1,4 +1,54 @@
 ---
-title: 'Create Plant'
-openapi: 'POST /plants'
+title: Create Payin Order
 ---
+
+# Create Payin Order
+
+Create a payin order (deposit). This is the opposite of payout (withdraw). This endpoint supports two authentication methods: either use client credentials headers OR a bearer token.
+
+**Endpoint:** `POST /payin/create-order`
+
+## Authentication
+- `x-client-id` (header, optional)
+- `x-client-secret` (header, optional)
+- Or Bearer token
+
+## Request Body
+```json
+{
+  "client_id": "finflex_test_6868706820",
+  "amount": 10,
+  "order_id": "321sdf",
+  "callback_url": "https://google.com",
+  "customer_details": {
+    "email": "donation@gmail.com",
+    "mobile": "9040660463",
+    "name": "Testing"
+  }
+}
+```
+
+## Response (201)
+```json
+{
+  "success": true,
+  "message": "Payin order created successfully",
+  "data": {
+    "order_id": "321sdf",
+    "client_id": "finflex_test_6868706820",
+    "amount": 10,
+    "status": "pending",
+    "payment_url": "https://payment.smebank.com/pay/abc123",
+    "transaction_id": "txn_987654321",
+    "created_at": "2024-07-04T10:30:00Z"
+  }
+}
+```
+
+## Error Response (401)
+```json
+{
+  "status": false,
+  "message": "Authentication failed - please provide either valid client credentials or a valid Bearer token"
+}
+```

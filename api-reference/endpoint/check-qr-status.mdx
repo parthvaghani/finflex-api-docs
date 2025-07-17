@@ -1,0 +1,47 @@
+---
+title: Check QR Payment Status
+---
+
+# Check QR Payment Status
+
+Check the payment status of a QR order and return additional payin order details from the database using `ref_id`.
+
+**Endpoint:** `POST /payin/check-qr-status`
+
+## Authentication
+- `x-client-id` (header, optional)
+- `x-client-secret` (header, optional)
+- Or Bearer token
+
+## Request Body
+```json
+{
+  "client_id": "finflex_test_6868706820",
+  "slug": "QXCtRyzcsJp9",
+  "ref_id": "QXCtRyzcsJp91752058602"
+}
+```
+
+## Response (200)
+```json
+{
+  "typof": {},
+  "payin_order": {}
+}
+```
+
+## Error Response (401)
+```json
+{
+  "status": false,
+  "message": "Authentication failed - please provide either valid client credentials or a valid Bearer token"
+}
+```
+
+## Error Response (404)
+```json
+{
+  "code": 404,
+  "message": "Payin order not found with the provided ref_id"
+}
+``` 

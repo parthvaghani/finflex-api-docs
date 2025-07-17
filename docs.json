@@ -21,13 +21,13 @@
   "navbar": {
     "links": [
       {
-        "href": "mailto:hi@mintlify.com",
+        "href": "mailto:finflexinfras@gmail.com",
         "label": "Support"
       }
     ],
     "primary": {
-      "href": "https://dashboard.mintlify.com",
-      "label": "Dashboard",
+      "href": "https://finflex-web-admin.vercel.app",
+      "label": "Finflex Dashboard",
       "type": "button"
     }
   },
@@ -37,7 +37,9 @@
         "groups": [
           {
             "group": "API Documentation",
-            "pages": ["api-reference/introduction"]
+            "pages": [
+              "api-reference/introduction"
+            ]
           },
           {
             "group": "Pay In Endpoints",

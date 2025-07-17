@@ -1,5 +1,10 @@
 {
   "$schema": "https://mintlify.com/docs.json",
+  "api": {
+    "playground": {
+      "proxy": false
+    }
+  },
   "colors": {
     "dark": "#15803D",
     "light": "#07C983",
@@ -37,7 +42,9 @@
         "groups": [
           {
             "group": "API Documentation",
-            "pages": ["api-reference/introduction"]
+            "pages": [
+              "api-reference/introduction"
+            ]
           },
           {
             "group": "Pay In Endpoints",
@@ -55,10 +62,5 @@
       }
     ]
   },
-  "theme": "mint",
-  "api": {
-    "playground": {
-      "proxy": false
-    }
-  }
+  "theme": "mint"
 }

@@ -17,6 +17,35 @@
   },
   "openapi": "3.0.3",
   "paths": {
+    "/": {
+      "get": {
+        "description": "Returns the health status of the server.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "Health Check :) Server is up and running"
+                },
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "example": "Health Check :) Server is up and running",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Server is up and running"
+          }
+        },
+        "security": [],
+        "summary": "Health Check",
+        "tags": ["Health"]
+      }
+    },
     "/payin/check-qr-status": {
       "post": {
         "description": "Check the payment status of a QR order and return additional payin order details from the database using ref_id.",
@@ -60,11 +89,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "client_id",
-                  "slug",
-                  "ref_id"
-                ],
+                "required": ["client_id", "slug", "ref_id"],
                 "type": "object"
               }
             }
@@ -133,10 +158,13 @@
             "description": "Payin order not found"
           }
         },
+        "servers": [
+          {
+            "url": "https://48x2gpzu9b.execute-api.ap-south-1.amazonaws.com/v1"
+          }
+        ],
         "summary": "Check QR payment status and get payin order details",
-        "tags": [
-          "Pay In"
-        ]
+        "tags": ["Pay In"]
       }
     },
     "/payin/create-order": {
@@ -196,11 +224,7 @@
                         "type": "string"
                       }
                     },
-                    "required": [
-                      "email",
-                      "mobile",
-                      "name"
-                    ],
+                    "required": ["email", "mobile", "name"],
                     "type": "object"
                   },
                   "order_id": {
@@ -297,10 +321,13 @@
             "description": "Authentication failed"
           }
         },
+        "servers": [
+          {
+            "url": "https://48x2gpzu9b.execute-api.ap-south-1.amazonaws.com/v1"
+          }
+        ],
         "summary": "Create payin order (deposit)",
-        "tags": [
-          "Pay In"
-        ]
+        "tags": ["Pay In"]
       }
     }
   },
@@ -311,13 +338,17 @@
   ],
   "servers": [
     {
-      "url": "https://48x2gpzu9b.execute-api.ap-south-1.amazonaws.com/v1"
+      "url": "https://48x2gpzu9b.execute-api.ap-south-1.amazonaws.com"
     }
   ],
   "tags": [
     {
       "description": "Pay-in operations",
       "name": "Pay In"
+    },
+    {
+      "description": "Health check endpoints",
+      "name": "Health"
     }
   ]
 }

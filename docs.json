@@ -37,9 +37,7 @@
         "groups": [
           {
             "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
+            "pages": ["api-reference/introduction"]
           },
           {
             "group": "Pay In Endpoints",
@@ -57,5 +55,10 @@
       }
     ]
   },
-  "theme": "mint"
+  "theme": "mint",
+  "api": {
+    "playground": {
+      "proxy": false
+    }
+  }
 }
